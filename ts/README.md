@@ -48,6 +48,39 @@ console.log(maker.generateNumbering(1)); // 输出: 1.2.
 console.log(maker.generateNumbering(2)); // 输出: 1.2.1.
 ```
 
+## 不同层级使用不同编码器
+
+```typescript
+import {
+  createMultilevelNumberingMaker,
+  createNumberingLevel
+} from '@jacktea/numbering-maker';
+
+const maker = createMultilevelNumberingMaker(1);
+
+maker.levels[0] = createNumberingLevel('decimal', {
+  start: 1,
+  level: 0,
+  pattern: '%1.'
+});
+maker.levels[1] = createNumberingLevel('upperRoman', {
+  start: 1,
+  level: 1,
+  pattern: '%1.%2.'
+});
+maker.levels[2] = createNumberingLevel('chineseSimplified', {
+  start: 1,
+  level: 2,
+  pattern: '%1.%2.%3.'
+});
+
+console.log(maker.generateNumbering(0)); // 输出: 1.
+console.log(maker.generateNumbering(1)); // 输出: 1.I.
+console.log(maker.generateNumbering(1)); // 输出: 1.II.
+console.log(maker.generateNumbering(2)); // 输出: 1.II.一.
+console.log(maker.generateNumbering(2)); // 输出: 1.II.二.
+```
+
 ## 运行测试
 
 ```bash

@@ -42,6 +42,16 @@ level 2 -> 1.2.1.
 level 2 -> 1.2.2.
 ```
 
+You can also override specific levels with different encoders. For example, if level 1 uses `decimal`, level 2 uses `upperRoman`, and level 3 uses `chineseSimplified`, the progression can look like:
+
+```text
+level 0 -> 1.
+level 1 -> 1.I.
+level 1 -> 1.II.
+level 2 -> 1.II.一.
+level 2 -> 1.II.二.
+```
+
 ## Quick Start
 
 ### Java

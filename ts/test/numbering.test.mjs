@@ -61,6 +61,32 @@ test("row number rollback sequence matches expected pattern", () => {
   assert.equal(maker.generateNumbering(2), "1.3.1.");
 });
 
+test("README mixed encoder example produces expected sequence", () => {
+  const maker = createMultilevelNumberingMaker(1);
+
+  maker.levels[0] = createNumberingLevel("decimal", {
+    start: 1,
+    level: 0,
+    pattern: "%1."
+  });
+  maker.levels[1] = createNumberingLevel("upperRoman", {
+    start: 1,
+    level: 1,
+    pattern: "%1.%2."
+  });
+  maker.levels[2] = createNumberingLevel("chineseSimplified", {
+    start: 1,
+    level: 2,
+    pattern: "%1.%2.%3."
+  });
+
+  assert.equal(maker.generateNumbering(0), "1.");
+  assert.equal(maker.generateNumbering(1), "1.I.");
+  assert.equal(maker.generateNumbering(1), "1.II.");
+  assert.equal(maker.generateNumbering(2), "1.II.一.");
+  assert.equal(maker.generateNumbering(2), "1.II.二.");
+});
+
 test("factory creates concrete level types", () => {
   const config = { start: 1, level: 0, pattern: "%1." };
 

@@ -43,7 +43,7 @@ mvn install
 ## 快速开始
 
 ```java
-import io.github.jacktea.numbering.NumberingMaker;
+import io.github.jacktea.numberingmaker.NumberingMaker;
 
 public class Main {
     public static void main(String[] args) {
@@ -53,6 +53,40 @@ public class Main {
         System.out.println(maker.generateNumbering(1)); // 输出: 1.1.
         System.out.println(maker.generateNumbering(1)); // 输出: 1.2.
         System.out.println(maker.generateNumbering(2)); // 输出: 1.2.1.
+    }
+}
+```
+
+## 不同层级使用不同编码器
+
+```java
+import io.github.jacktea.numberingmaker.NumberingFormat;
+import io.github.jacktea.numberingmaker.NumberingLevelConfig;
+import io.github.jacktea.numberingmaker.NumberingMaker;
+import io.github.jacktea.numberingmaker.level.NumberingLevelFactory;
+
+public class Main {
+    public static void main(String[] args) {
+        NumberingMaker maker = NumberingMaker.createMultilevelNumberingMaker(1);
+
+        maker.getLevels().set(0, NumberingLevelFactory.createLevel(
+            NumberingFormat.DECIMAL,
+            new NumberingLevelConfig(1, 0, "%1.", null)
+        ));
+        maker.getLevels().set(1, NumberingLevelFactory.createLevel(
+            NumberingFormat.UPPER_ROMAN,
+            new NumberingLevelConfig(1, 1, "%1.%2.", null)
+        ));
+        maker.getLevels().set(2, NumberingLevelFactory.createLevel(
+            NumberingFormat.CHINESE_SIMPLIFIED,
+            new NumberingLevelConfig(1, 2, "%1.%2.%3.", null)
+        ));
+
+        System.out.println(maker.generateNumbering(0)); // 输出: 1.
+        System.out.println(maker.generateNumbering(1)); // 输出: 1.I.
+        System.out.println(maker.generateNumbering(1)); // 输出: 1.II.
+        System.out.println(maker.generateNumbering(2)); // 输出: 1.II.一.
+        System.out.println(maker.generateNumbering(2)); // 输出: 1.II.二.
     }
 }
 ```

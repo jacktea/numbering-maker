@@ -47,6 +47,52 @@ func main() {
 }
 ```
 
+## 不同层级使用不同编码器
+
+```go
+package main
+
+import (
+	"fmt"
+
+	numberingmaker "github.com/jacktea/numbering-maker/go"
+)
+
+func main() {
+	maker := numberingmaker.CreateMultilevelNumberingMaker(1)
+
+	maker.Levels[0] = numberingmaker.CreateLevel(numberingmaker.DecimalFormat, &numberingmaker.NumberingLevelConfig{
+		Start:   intPtr(1),
+		Level:   intPtr(0),
+		Pattern: stringPtr("%1."),
+	})
+	maker.Levels[1] = numberingmaker.CreateLevel(numberingmaker.UpperRomanFormat, &numberingmaker.NumberingLevelConfig{
+		Start:   intPtr(1),
+		Level:   intPtr(1),
+		Pattern: stringPtr("%1.%2."),
+	})
+	maker.Levels[2] = numberingmaker.CreateLevel(numberingmaker.ChineseSimplifiedFormat, &numberingmaker.NumberingLevelConfig{
+		Start:   intPtr(1),
+		Level:   intPtr(2),
+		Pattern: stringPtr("%1.%2.%3."),
+	})
+
+	fmt.Println(maker.GenerateNumbering(0)) // 输出: 1.
+	fmt.Println(maker.GenerateNumbering(1)) // 输出: 1.I.
+	fmt.Println(maker.GenerateNumbering(1)) // 输出: 1.II.
+	fmt.Println(maker.GenerateNumbering(2)) // 输出: 1.II.一.
+	fmt.Println(maker.GenerateNumbering(2)) // 输出: 1.II.二.
+}
+
+func intPtr(value int) *int {
+	return &value
+}
+
+func stringPtr(value string) *string {
+	return &value
+}
+```
+
 ## 运行测试
 
 ```bash

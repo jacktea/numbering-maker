@@ -42,6 +42,16 @@ level 2 -> 1.2.1.
 level 2 -> 1.2.2.
 ```
 
+也可以在默认的多级编号基础上，按层级替换不同编码器。例如第 1 级使用 `decimal`、第 2 级使用 `upperRoman`、第 3 级使用 `chineseSimplified` 时，输出可以是：
+
+```text
+level 0 -> 1.
+level 1 -> 1.I.
+level 1 -> 1.II.
+level 2 -> 1.II.一.
+level 2 -> 1.II.二.
+```
+
 ## 快速开始
 
 ### Java

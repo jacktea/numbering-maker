@@ -58,6 +58,32 @@ func TestRowNumberRollbackSequence(t *testing.T) {
 	assertEqual(t, "1.3.1.", maker.GenerateNumbering(2))
 }
 
+func TestReadmeMixedEncoderExampleProducesExpectedSequence(t *testing.T) {
+	maker := CreateMultilevelNumberingMaker(1)
+
+	maker.Levels[0] = CreateLevel(DecimalFormat, &NumberingLevelConfig{
+		Start:   intPtr(1),
+		Level:   intPtr(0),
+		Pattern: stringPtr("%1."),
+	})
+	maker.Levels[1] = CreateLevel(UpperRomanFormat, &NumberingLevelConfig{
+		Start:   intPtr(1),
+		Level:   intPtr(1),
+		Pattern: stringPtr("%1.%2."),
+	})
+	maker.Levels[2] = CreateLevel(ChineseSimplifiedFormat, &NumberingLevelConfig{
+		Start:   intPtr(1),
+		Level:   intPtr(2),
+		Pattern: stringPtr("%1.%2.%3."),
+	})
+
+	assertEqual(t, "1.", maker.GenerateNumbering(0))
+	assertEqual(t, "1.I.", maker.GenerateNumbering(1))
+	assertEqual(t, "1.II.", maker.GenerateNumbering(1))
+	assertEqual(t, "1.II.一.", maker.GenerateNumbering(2))
+	assertEqual(t, "1.II.二.", maker.GenerateNumbering(2))
+}
+
 func TestCreateLevelReturnsConcreteImplementations(t *testing.T) {
 	config := &NumberingLevelConfig{
 		Start:   intPtr(1),

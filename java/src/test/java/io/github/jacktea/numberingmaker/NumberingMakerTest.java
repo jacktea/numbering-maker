@@ -1,5 +1,6 @@
 package io.github.jacktea.numberingmaker;
 
+import io.github.jacktea.numberingmaker.level.NumberingLevelFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,5 +62,29 @@ class NumberingMakerTest {
         assertEquals("1.2.3.", maker.generateNumbering(2));
         assertEquals("1.3.", maker.generateNumbering(1));
         assertEquals("1.3.1.", maker.generateNumbering(2));
+    }
+
+    @Test
+    void readmeMixedEncoderExample_producesExpectedSequence() {
+        NumberingMaker maker = NumberingMaker.createMultilevelNumberingMaker(1);
+
+        maker.getLevels().set(0, NumberingLevelFactory.createLevel(
+            NumberingFormat.DECIMAL,
+            new NumberingLevelConfig(1, 0, "%1.", null)
+        ));
+        maker.getLevels().set(1, NumberingLevelFactory.createLevel(
+            NumberingFormat.UPPER_ROMAN,
+            new NumberingLevelConfig(1, 1, "%1.%2.", null)
+        ));
+        maker.getLevels().set(2, NumberingLevelFactory.createLevel(
+            NumberingFormat.CHINESE_SIMPLIFIED,
+            new NumberingLevelConfig(1, 2, "%1.%2.%3.", null)
+        ));
+
+        assertEquals("1.", maker.generateNumbering(0));
+        assertEquals("1.I.", maker.generateNumbering(1));
+        assertEquals("1.II.", maker.generateNumbering(1));
+        assertEquals("1.II.一.", maker.generateNumbering(2));
+        assertEquals("1.II.二.", maker.generateNumbering(2));
     }
 }
