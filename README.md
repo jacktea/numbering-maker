@@ -65,6 +65,27 @@ cd ts
 npm test
 ```
 
+## Version Bump
+
+Use the root script to bump Java and TypeScript versions together:
+
+```bash
+./bump-version.sh patch
+```
+
+Other forms:
+
+- `./bump-version.sh minor`
+- `./bump-version.sh major`
+- `./bump-version.sh set 1.2.3`
+- `./bump-version.sh patch --dry-run`
+
+Tag policy:
+
+- Create a git tag when the bumped version is actually being released
+- Create the tag only after committing the version bump
+- If you are only validating locally, skip the tag until the release commit is ready
+
 ## Unified Release
 
 Run the root release script to verify all three packages and collect artifacts:
