@@ -5,7 +5,7 @@
 
     <groupId>io.github.jacktea</groupId>
     <artifactId>numbering-maker-java</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
     <name>numbering-maker-java</name>
 
     <properties>
