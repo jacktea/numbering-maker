@@ -122,6 +122,70 @@ Useful options:
 
 The script publishes to `https://registry.npmjs.org/` with public access and uses a local npm cache under `.cache/npm`.
 
+For CI or prebuilt tarballs, it also supports:
+
+- `--skip-auth`: skip `npm whoami` verification
+- `--tarball <file>`: publish a prebuilt `.tgz` file
+
+## GitHub Tag Release
+
+This repository can be released by pushing a tag in the form `vX.Y.Z`, or by manually dispatching the release workflow against an existing tag.
+
+Workflow file:
+
+- `.github/workflows/release.yml`
+
+What the workflow does:
+
+- validates that the pushed tag version matches `ts/package.json` and `java/pom.xml`
+- runs the unified build via `./release.sh`
+- creates a GitHub Release and uploads:
+  - Java jar
+  - Go source archive
+  - TypeScript npm tarball
+  - `SHA256SUMS`
+  - `manifest.txt`
+- publishes `ts/` to npmjs through npm Trusted Publishing
+
+Trigger modes:
+
+- push trigger: runs automatically when `vX.Y.Z` is pushed
+- manual trigger: run `Release` from GitHub Actions UI and provide `release_tag=vX.Y.Z`
+
+One-time setup:
+
+1. Create the GitHub repository and configure `origin`
+2. Push the repository content, including `.github/workflows/release.yml`
+3. On npmjs, open the package settings for `@jacktea/numbering-maker`
+4. Add a Trusted Publisher:
+   `GitHub user/org` + `repository` + `workflow filename=release.yml`
+5. Use a GitHub-hosted runner
+6. After the first successful publish, optionally tighten npm package security to require 2FA and disallow classic tokens
+
+Per-release local steps:
+
+```bash
+./bump-version.sh patch
+git add ts/package.json java/pom.xml
+git commit -m "chore: bump version to X.Y.Z"
+git tag -a vX.Y.Z -m "Release vX.Y.Z"
+git push origin <branch> --follow-tags
+```
+
+Manual rerun flow:
+
+1. Open GitHub Actions
+2. Choose the `Release` workflow
+3. Click `Run workflow`
+4. Enter an existing tag like `v0.1.1`
+5. Run it against that tag
+
+Important rules:
+
+- the tag must be created after the version bump commit
+- the tag must match the code version exactly
+- the workflow is designed for public npm publishing through OIDC, not long-lived `NPM_TOKEN`
+
 ## Scope
 
-This repository provides pure in-memory numbering libraries only. It does not include DOCX parsing, XML adapters, or `docx4j` integration.
+This repository provides pure in-memory numbering libraries only.
