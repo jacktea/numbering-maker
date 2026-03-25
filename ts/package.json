@@ -3,6 +3,11 @@
   "version": "0.1.1",
   "type": "module",
   "description": "Pure numbering generator for JavaScript and TypeScript runtimes.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jacktea/numbering-maker.git",
+    "directory": "ts"
+  },
   "exports": {
     ".": "./dist/src/index.js"
   },

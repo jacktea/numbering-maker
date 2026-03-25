@@ -111,6 +111,7 @@ jobs:
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ needs.validate_and_build.outputs.release_tag }}
           RELEASE_VERSION: ${{ needs.validate_and_build.outputs.release_version }}
         shell: bash
@@ -124,10 +125,10 @@ jobs:
             "${release_dir}/SHA256SUMS"
             "${release_dir}/manifest.txt"
           )
-          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
-            gh release upload "$RELEASE_TAG" "${assets[@]}" --clobber
+          if gh release view "$RELEASE_TAG" --repo "$GH_REPO" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" "${assets[@]}" --repo "$GH_REPO" --clobber
           else
-            gh release create "$RELEASE_TAG" "${assets[@]}" --title "$RELEASE_TAG" --generate-notes
+            gh release create "$RELEASE_TAG" "${assets[@]}" --repo "$GH_REPO" --verify-tag --title "$RELEASE_TAG" --generate-notes
           fi
 
   publish_npm:
@@ -149,6 +150,9 @@ jobs:
         with:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
+
+      - name: Clear Legacy npm Auth Flag
+        run: npm config delete always-auth || true
 
       - name: Publish Package To npmjs
         env:
