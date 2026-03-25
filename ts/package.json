@@ -1,6 +1,6 @@
 {
   "name": "@jacktea/numbering-maker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "Pure numbering generator for JavaScript and TypeScript runtimes.",
   "exports": {
